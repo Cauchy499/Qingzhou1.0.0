@@ -1,1 +1,31 @@
-name: Build APK<br/><br/>on:<br/>  push:<br/>    branches: [main]<br/>  workflow_dispatch:<br/><br/>jobs:<br/>  build:<br/>    runs-on: ubuntu-latest<br/>    steps:<br/>      - uses: actions/checkout@v4<br/><br/>      - name: Set up JDK 17<br/>        uses: actions/setup-java@v4<br/>        with:<br/>          distribution: temurin<br/>          java-version: 17<br/>          cache: gradle<br/><br/>      - name: Make gradlew executable<br/>        run: chmod +x gradlew<br/><br/>      - name: Build debug APK<br/>        run: ./gradlew assembleDebug --no-daemon<br/><br/>      - name: Upload APK<br/>        uses: actions/upload-artifact@v4<br/>        with:<br/>          name: debug-apk<br/>          path: app/build/outputs/apk/debug/*.apk
+name: Build APK
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Grant execute permission
+        run: chmod +x gradlew
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
